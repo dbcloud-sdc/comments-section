@@ -2,6 +2,5 @@ node_modules
 npm-debug.log
 tests
 client
-pics
 coverage
 .elasticbeanstalk

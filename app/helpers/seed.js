@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const connection = require('mysql');
 const loremIpsum = require('lorem-ipsum');
 const request = require('request');
 const fs = require('fs');
@@ -25,13 +25,6 @@ const moment = require('moment');
 // }
 // populateFolder();
 
-const connection = mysql.createConnection({
-  host: '172.17.0.2',
-  user: 'root',
-  password: 'password',
-});
-
-
 const createTable = async () => {
   await connection.query('DROP TABLE IF EXISTS comments');
   await connection.query(`CREATE TABLE comments(
@@ -47,6 +40,7 @@ const createTable = async () => {
 };
 
 const getRandomTime = () => {
+  // fix for 3 month time frame
   const randomNum = () => Math.floor(Math.random() * 30 + 1);
   return moment().subtract(randomNum(), 'minutes').format();
 };
@@ -89,7 +83,7 @@ const createMessages = () => {
 };
 
 
-const Seed = async () => {
+module.exports = async () => {
   await connection.query('DROP DATABASE IF EXISTS ZoundCloud');
   await connection.query('CREATE DATABASE ZoundCloud');
   await connection.query('USE ZoundCloud');
@@ -99,5 +93,3 @@ const Seed = async () => {
   }
   await connection.end();
 };
-
-module.exports = Seed;
