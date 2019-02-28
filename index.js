@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
 const compress = require('compression');
-const router = require('./app/routers/router.js');
+const router = require('./app/controllers/router.js');
 
 const port = 3000;
 const app = express();

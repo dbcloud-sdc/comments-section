@@ -1,4 +1,4 @@
-# dBCloud: Reservations API v1.0
+# dBCloud: Comments Section API v1.0
 
 ## Table of Contents
 * [**Comments-Section.comments**](#commentscomments)
