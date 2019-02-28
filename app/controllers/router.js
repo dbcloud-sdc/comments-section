@@ -17,7 +17,9 @@ router.get('/:songId/comments', (req, res) => {
     })
     .catch((err) => {
       // console.log('failed to read comments');
-      res.send(403, err);
+      // should handle 403 error for unauthorized use
+      // should handle 503 error for database error
+      res.send(400, err);
     });
 });
 
@@ -25,13 +27,13 @@ router.post('/:songId/comments', (req, res) => {
   const { songId } = req.params;
   // declare request body variable
   db.createComment(songId, body)
-    .then((confirmation) => {
+    .then(() => {
       // console.log('posted comment');
-      res.send(200, confirmation);
+      res.send(201);
     })
     .catch((err) => {
       // console.log('failed to post comment');
-      res.send(403, err);
+      res.send(400, err);
     });
 });
 
@@ -40,11 +42,11 @@ router.delete('/:songId/comments', (req, res) => {
   db.deleteComment(songId)
     .then((confirmation) => {
       // console.log('deleted comment');
-      res.send(200, confirmation);
+      res.send(204, confirmation);
     })
     .catch((err) => {
       // console.log('failed to delete comment');
-      res.send(403, err);
+      res.send(400, err);
     });
 });
 
@@ -54,11 +56,11 @@ router.patch('/:songId/comments', (req, res) => {
   db.updateComment(songId, body)
     .then((confirmation) => {
       // console.log('updated comment');
-      res.send(200, confirmation);
+      res.send(204, confirmation);
     })
     .catch((err) => {
       // console.log('failed to update comment');
-      res.send(403, err);
+      res.send(400, err);
     });
 });
 
@@ -71,8 +73,10 @@ router.get('/:songId/commentCount', (req, res) => {
     })
     .catch((err) => {
       // console.log("didn't get count");
-      res.send(403, err);
+      res.send(400, err);
     });
 });
+
+// router handler for 405 Method Not Allowed
 
 module.exports = router;
