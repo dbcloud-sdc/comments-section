@@ -48,7 +48,7 @@ router.delete('/:songId/comments', (req, res) => {
     });
 });
 
-router.update('/:songId/comments', (req, res) => {
+router.patch('/:songId/comments', (req, res) => {
   const { songId } = req.params;
   // declare request body variable
   db.updateComment(songId, body)

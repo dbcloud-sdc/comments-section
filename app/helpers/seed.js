@@ -1,36 +1,41 @@
-const connection = require('mysql');
 const loremIpsum = require('lorem-ipsum');
-const request = require('request');
-const fs = require('fs');
 const moment = require('moment');
+const database = require('../../config.js');
+
+const getRandomTime = () => {
+  // fixed for 3 month time frame
+  const randomNum = () => Math.floor(Math.random() * 144000);
+  return moment().subtract(randomNum(), 'minutes').format();
+};
+
 
 database.schema.dropTableIfExists('comments')
   .then(() => database.schema.createTable('comments', (table) => {
-    table.increments('product_id');
+    table.increments('id');
     // song id
-    table.string('username');
-    table.string('profilePic'); // s3url
+    table.string('user_id');
+    // table.string('profilePic'); // s3url, belongs in a user table
     table.string('message');
     table.string('postedAt'); // refactor
     table.string('songTime');
-    table.string('followers'); // refactor
+    table.number('followers'); // refactor, is number a thing?
   }))
   .then(() => {
     // fill with row objects
     const rows = [];
     for (let i = 0; i < 1000; i += 1) {
-      const product = {};
-      product.name = faker.commerce.productName();
-      product.price = faker.commerce.price();
-      product.avg_review = Math.floor(Math.random() * 40 + 10) / 10;
-      product.review_count = Math.floor(Math.random() * 5000);
-      product.is_prime = faker.random.boolean();
-      product.category = faker.commerce.department();
-      product.manufacturer = faker.company.companyName();
+      const comment = {};
+      comment.user_id = null; //
+      comment.p = faker.commerce.price();
+      comment.avg_review = Math.floor(Math.random() * 40 + 10) / 10;
+      comment.review_count = Math.floor(Math.random() * 5000);
+      comment.is_prime = faker.random.boolean();
+      comment.category = faker.commerce.department();
+      comment.manufacturer = faker.company.companyName();
       // product.image = `https://s3-us-west-1.amazonaws.com/amazon-product-carousel-images/products/item-${i + 1}.png`;
-      rows.push(product);
+      rows.push(comment);
     }
-    return database('products').insert(rows);
+    return database('comments').insert(rows);
   })
   .then(() => {
     process.exit();
@@ -38,7 +43,6 @@ database.schema.dropTableIfExists('comments')
   .catch((err) => {
     throw (err);
   });
-
 
 // const createTable = async () => {
 //   await connection.query('DROP TABLE IF EXISTS comments');
@@ -52,12 +56,6 @@ database.schema.dropTableIfExists('comments')
 //     songTime VARCHAR(200),
 //     followers VARCHAR(200)
 //   )`);
-// };
-
-// const getRandomTime = () => {
-//   // fix for 3 month time frame
-//   const randomNum = () => Math.floor(Math.random() * 30 + 1);
-//   return moment().subtract(randomNum(), 'minutes').format();
 // };
 
 // const randomSongTime = () => {
