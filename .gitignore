@@ -5,8 +5,6 @@
 npm
 npm-debug.log
 node_modules/
-pics/
-pids
 *.pid
 logs
 *.log
