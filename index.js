@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const compress = require('compression');
-const { readComments, readCount } = require('./app/routers/router.js');
+const { readComments, readCount } = require('./app/controllers/router.js');
 
 const port = 3000;
 const app = express();
