@@ -61,35 +61,35 @@ export default class CommentSection extends React.Component {
   }
 
   handleScroll = () => {
-      if(this.state.commentCount !== this.state.comments.length){
-          if(this.state.commentCount + 20 > this.state.comments.length){
-            this.setState(state => {
-              state.loading = false
-              state.commentCount = state.commentCount = this.state.comments.length;
-            }, () => this.renderComments());
-          }else{
-            // this.setState(state => state.commentCount = state.commentCount + 20, () => this.renderComments());
-            this.setState(state => {
-              state.commentCount = state.commentCount = state.commentCount + 20;
-            }, () => this.renderComments());
-          }
-        }
-  }
-
-    onScroll = () => {
-      if (
-        (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500) 
-      ) {
-        this.handleScroll()
+    if(this.state.commentCount !== this.state.comments.length){
+      if(this.state.commentCount + 20 > this.state.comments.length){
+        this.setState(state => {
+          state.loading = false
+          state.commentCount = state.commentCount = this.state.comments.length;
+        }, () => this.renderComments());
+      }else{
+        // this.setState(state => state.commentCount = state.commentCount + 20, () => this.renderComments());
+        this.setState(state => {
+          state.commentCount = state.commentCount = state.commentCount + 20;
+        }, () => this.renderComments());
       }
     }
+  }
+
+  onScroll = () => {
+    if (
+      (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500) 
+    ) {
+      this.handleScroll()
+    }
+  }
   
   renderComments = () => {
     this.setState({displayedComments: []}, () => {
       for (let i = 0; i < this.state.commentCount; i++) {
         this.setState(state => {
-        return state.displayedComments.push(state.comments[i])}
-        )
+          return state.displayedComments.push(state.comments[i])
+        })
       }
     })
   }
