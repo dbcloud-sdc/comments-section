@@ -7,3 +7,8 @@ module.exports = {
   deleteComment: songId => connection.query(`SELECT * FROM comments where songId = ${songId}`),
   readCount: songId => connection.query(`SELECT * FROM comments where songId = ${songId}`),
 };
+
+/*
+SELECT * FROM comments
+INTO OUTFILE '/Users/diablo/Documents/test/mysql/test.csv';
+*/
