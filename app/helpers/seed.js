@@ -6,17 +6,17 @@ const database = require('../../config.js');
 
 const randomNum = num => Math.floor(Math.random() * num);
 
-const getRandomTime = () => {
-  const minutesAgo = () => randomNum(144000);
-  return moment().subtract(minutesAgo(), 'minutes').format();
-};
+// const getRandomTime = () => {
+//   const minutesAgo = () => randomNum(144000);
+//   return moment().subtract(minutesAgo(), 'minutes').format();
+// };
 
-const randomSongTime = () => {
-  const minute = randomNum(5);
-  let second = randomNum(59);
-  second = second < 10 ? `0${second}` : second;
-  return `${minute}:${second}`;
-};
+// const randomSongTime = () => {
+//   const minute = randomNum(5);
+//   let second = randomNum(59);
+//   second = second < 10 ? `0${second}` : second;
+//   return `${minute}:${second}`;
+// };
 
 const randomComment = () => {
   const lorem = [
@@ -31,7 +31,7 @@ const randomComment = () => {
     'Four loko quinoa skateboard, raclette proident bushwick intelligentsia sunt elit ugh quis.',
     "Occupy 90's before they sold out cardigan, disrupt sustainable palo santo tbh.",
   ];
-  return lorem[randomNum(lorem.length)] + lorem[randomNum(lorem.length)];
+  return `${lorem[randomNum(lorem.length)]} ${lorem[randomNum(lorem.length)]}`;
 };
 
 class CommentsStream extends stream.Readable {
@@ -45,21 +45,15 @@ class CommentsStream extends stream.Readable {
   }
 
   _read() {
-    // if count has reached limit, push null
     if (this.count === this.limit) {
-      this.push(this.cache);
+      this.push(null);
     } else {
-      // loop from count to count + 200;
-      const workcount = this.count + 100;
+      const workcount = this.count + 1000;
       for (let i = this.count; i < workcount; i += 1) {
-        // --> increment count
         this.count += 1;
-        // --> push a new user to cache
-        this.cache += this.generateUser();
+        this.cache += this.generateComment();
       }
-      // this.push cache
       this.push(this.cache);
-      // reset cache to '';
       this.cache = '';
       this.progressBar();
     }
@@ -87,14 +81,13 @@ class CommentsStream extends stream.Readable {
     }
   }
 
-  generateUser() {
-    let string = `${this.count},`;
-    string += `${faker.internet.userName()},`;
-    string += `${randomNum(10000000) + 1},`;
-    string += `${faker.lorem.sentence(10, 3)},`;
-    string += `${getRandomTime()},`;
-    string += `${randomSongTime()},`;
-    string += `${randomNum(10000) + 1}\n`;
+  generateComment() {
+    let string = `${this.count}\t`;
+    string += `${randomNum(1e7) + 1}\t`;
+    string += `${randomNum(1e7) + 1}\t`;
+    string += `${randomNum(259200)}\t`;
+    string += `${randomNum(480) + 120}\t`;
+    string += `${randomComment()}\n`;
     return string;
   }
 }
@@ -153,7 +146,7 @@ class UsersStream extends stream.Readable {
   }
 
   generateUser() {
-    return `${this.count}, ${faker.internet.userName()}, ${randomNum(1e5) + 1}\n`;
+    return `${this.count}\t${faker.internet.userName()}\t${randomNum(1e5) + 1}\n`;
   }
 }
 
@@ -162,10 +155,8 @@ async function seedUsersToCSV() {
     .then(() => database.schema.createTable('users', (table) => {
       table.increments('id');
       table.string('username');
-      // table.string('profilePic'); // s3url, belongs in a user table
       table.integer('followers');
     }));
-  const now = new Date();
   const ws = fs.createWriteStream('./userdata.csv');
   const rs = new UsersStream();
   rs.pipe(ws);
@@ -180,18 +171,17 @@ async function seedCommentsToCSV() {
       table.increments('id');
       table.integer('songId');
       table.integer('userId');
-      table.string('message');
-      table.string('postedAt');
-      table.string('songTime');
+      table.integer('postedAt');
+      table.integer('songTime');
+      table.text('message');
     }));
-  const now = new Date();
   const ws = fs.createWriteStream('./commentsdata.csv');
   const rs = new CommentsStream();
   rs.pipe(ws);
   ws.on('end', () => {
-    console.log('celebration');
+    process.exit();
   });
 }
 
 // seedCommentsToCSV();
-// seedUsersToCSV();
+seedUsersToCSV();
