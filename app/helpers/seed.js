@@ -183,5 +183,5 @@ async function seedCommentsToCSV() {
   });
 }
 
-// seedCommentsToCSV();
+seedCommentsToCSV();
 seedUsersToCSV();
