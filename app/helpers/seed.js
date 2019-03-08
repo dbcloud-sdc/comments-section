@@ -45,6 +45,9 @@ class CommentsStream extends stream.Readable {
   }
 
   _read() {
+    if (this.count === 0) {
+      this.push('id\tsongId\tuserId\tpostedAt\tsongTime\tmessage\n');
+    }
     if (this.count === this.limit) {
       this.push(null);
     } else {
@@ -103,7 +106,9 @@ class UsersStream extends stream.Readable {
   }
 
   _read() {
-    // if count has reached limit, push null
+    if (this.count === 0) {
+      this.push('id\tusername\tfollowers\n');
+    }
     if (this.count === this.limit) {
       this.push(null);
     } else {
@@ -151,13 +156,13 @@ class UsersStream extends stream.Readable {
 }
 
 async function seedUsersToCSV() {
-  await database.schema.dropTableIfExists('users')
-    .then(() => database.schema.createTable('users', (table) => {
-      table.increments('id');
-      table.string('username');
-      table.integer('followers');
-    }));
-  const ws = fs.createWriteStream('./userdata.csv');
+  // await database.schema.dropTableIfExists('users')
+  //   .then(() => database.schema.createTable('users', (table) => {
+  //     table.increments('id');
+  //     table.string('username');
+  //     table.integer('followers');
+  //   }));
+  const ws = fs.createWriteStream('./users.tsv');
   const rs = new UsersStream();
   rs.pipe(ws);
   ws.on('end', () => {
@@ -166,16 +171,16 @@ async function seedUsersToCSV() {
 }
 
 async function seedCommentsToCSV() {
-  await database.schema.dropTableIfExists('comments')
-    .then(() => database.schema.createTable('comments', (table) => {
-      table.increments('id');
-      table.integer('songId');
-      table.integer('userId');
-      table.integer('postedAt');
-      table.integer('songTime');
-      table.text('message');
-    }));
-  const ws = fs.createWriteStream('./commentsdata.csv');
+  // await database.schema.dropTableIfExists('comments')
+  //   .then(() => database.schema.createTable('comments', (table) => {
+  //     table.increments('id');
+  //     table.integer('songId');
+  //     table.integer('userId');
+  //     table.integer('postedAt');
+  //     table.integer('songTime');
+  //     table.text('message');
+  //   }));
+  const ws = fs.createWriteStream('./comments2.tsv');
   const rs = new CommentsStream();
   rs.pipe(ws);
   ws.on('end', () => {
@@ -184,4 +189,4 @@ async function seedCommentsToCSV() {
 }
 
 seedCommentsToCSV();
-seedUsersToCSV();
+// seedUsersToCSV();

@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
-const db = require('../database/database.js');
+// const db = require('../database/mongodb.js');
+const db = require('../database/mariadb.js');
+
 
 const router = express.Router();
 
@@ -8,17 +10,15 @@ router.get('/:songId', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../dist/index.html'));
 });
 
-router.get('/:songId/comments', (req, res) => {
+
+router.get('/:songId/comments', async (req, res) => {
   const { songId } = req.params;
-  db.readComments(songId)
+  await db.readComments(songId)
     .then((data) => {
-      // console.log('got comments');
-      res.send(200, data);
+      console.log(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
-      // console.log('failed to read comments');
-      // should handle 403 error for unauthorized use
-      // should handle 503 error for database error
       res.send(400, err);
     });
 });
@@ -76,7 +76,5 @@ router.get('/:songId/commentCount', (req, res) => {
       res.send(400, err);
     });
 });
-
-// router handler for 405 Method Not Allowed
 
 module.exports = router;
