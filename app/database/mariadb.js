@@ -4,8 +4,6 @@ const bluebird = require('bluebird');
 const config = require('../../config.js');
 
 const connection = mysql.createConnection(config);
-// const readFields = 'comments.id, comments.postedAt, comments.songTime,
-// comments.message, users.username, users.followers';
 
 connection.queryAsync = bluebird.promisify(connection.query).bind(connection);
 

@@ -3,7 +3,6 @@ const path = require('path');
 const db = require('../database/mariadb.js');
 const { cache, retrieve } = require('./redisCache');
 
-
 const router = express.Router();
 
 router.get('/:songId', (req, res) => {
@@ -14,15 +13,12 @@ router.get('/:songId/comments', (req, res) => {
   const { songId } = req.params;
   retrieve(songId)
     .then((data) => {
-      // console.log('got data');
-      // console.log(data);
       res.status(200).send(data);
     })
     .catch(() => db.readComments(songId)
       .then((data) => {
         cache(songId, data)
           .then(() => {
-            // console.log(data);
             res.status(200).send(data);
           });
       })
