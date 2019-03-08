@@ -37,7 +37,7 @@ export default class CommentSection extends React.Component {
   }
 
   getComments = () => {
-    axios.get(`${window.location.pathname}/comments`) //fix
+    axios.get(`${window.location.pathname}/comments`)
     .then((res) => {
       console.log(res);
       const sortedComments = _.sortBy(res.data, (i) => {
@@ -54,7 +54,7 @@ export default class CommentSection extends React.Component {
   }
 
   getCommentCount = () => {
-    axios.get(`${window.location.pathname}/commentCount`) //fix
+    axios.get(`${window.location.pathname}/commentCount`)
     .then((response) => {
       this.setState({
         count: response.data.count
