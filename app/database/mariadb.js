@@ -1,4 +1,3 @@
-// const mariadb = require('mariadb');
 const mysql = require('mysql');
 const bluebird = require('bluebird');
 const config = require('../../config.js');

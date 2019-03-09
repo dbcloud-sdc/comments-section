@@ -74,7 +74,6 @@
     "lorem-ipsum": "^1.0.6",
     "mariadb": "^2.0.3",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.17",
     "morgan": "^1.9.1",
     "mysql": "^2.16.0",
     "npm": "^6.7.0",

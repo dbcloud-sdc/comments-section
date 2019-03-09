@@ -1,0 +1,11 @@
+config:
+  target: 'http://localhost:80/song'
+  phases:
+    - duration: 120
+      arrivalRate: 350
+  processor: './powerCurve.js'
+scenarios:
+  - flow:
+    - function: 'randomSongPath'
+    - get:
+        url: '{{ songPath }}'
