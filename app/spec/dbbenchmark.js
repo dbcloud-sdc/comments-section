@@ -1,5 +1,5 @@
-const maria = require('../database/mariadb.js');
-const mongo = require('../database/mongodb.js');
+const maria = require('../../app/models/mariadb.js');
+const mongo = require('../models/mongodb.js');
 
 const randomNumber = n => Math.ceil(Math.random() * n);
 
@@ -34,19 +34,21 @@ async function readMongo(n) {
 async function elasticTest(totalTests) {
 // testing, hertz, average,
   let testing = true;
-  let filesPerSec = 300;
+  let filesPerSec = 100;
   let tests = 0;
-
+  let total = 0;
+  console.log('~~ testing MongoDB ~~');
   while (testing) {
     tests += 1;
     const start = Date.now();
     const results = await readMongo(filesPerSec);
     const time = (Date.now() - start) / 1000;
     console.log(`${filesPerSec} reads in ${time} seconds : ${results} errors`);
+    total += time;
     if (time > 1) {
-      filesPerSec -= 10;
+      filesPerSec -= 5;
     } else if (time < 1) {
-      filesPerSec += 10;
+      filesPerSec += 5;
     }
     if (tests === totalTests) {
       testing = false;
@@ -58,6 +60,7 @@ async function elasticTest(totalTests) {
   filesPerSec = 100;
   tests = 0;
   total = 0;
+  console.log('~~ testing MariaDB ~~');
 
 
   while (testing) {
@@ -66,6 +69,7 @@ async function elasticTest(totalTests) {
     const results = await readMaria(filesPerSec);
     const time = (Date.now() - start) / 1000;
     console.log(`${filesPerSec} reads in ${time} seconds : ${results} errors`);
+    total += time;
     if (time > 1) {
       filesPerSec -= 10;
     } else if (time < 1) {
