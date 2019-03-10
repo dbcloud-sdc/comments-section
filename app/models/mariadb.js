@@ -2,12 +2,12 @@ const mysql = require('mysql');
 const bluebird = require('bluebird');
 const config = require('../../config.js');
 
-const connection = mysql.createConnection(config);
+const pool = mysql.createPool(config);
 
-connection.queryAsync = bluebird.promisify(connection.query).bind(connection);
+pool.queryAsync = bluebird.promisify(pool.query).bind(pool);
 
 module.exports = {
-  readComments: songId => connection.queryAsync({
+  readComments: songId => pool.queryAsync({
     rowsAsArray: false,
     sql: `SELECT * FROM comments
                 WHERE songId = ${songId}`,
@@ -17,7 +17,7 @@ module.exports = {
     }
   }),
 
-  createComments: songId => connection
+  createComments: songId => pool
     .then(conn => conn.query({
       rowsAsArray: false,
       sql: `SELECT * FROM comments
@@ -29,3 +29,5 @@ module.exports = {
   // deleteComment: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
   // readCount: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
 };
+
+// implement streams
