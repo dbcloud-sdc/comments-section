@@ -29,7 +29,7 @@ async function readComments(n) {
 
 async function elasticTest(totalTests) {
   let testing = true;
-  let filesPerSec = 500;
+  let readsPerSec = 500;
   let tests = 0;
   let totalTime = 0;
   let totalErrors = 0;
@@ -38,16 +38,16 @@ async function elasticTest(totalTests) {
   while (testing) {
     tests += 1;
     const start = Date.now();
-    const results = await readComments(filesPerSec);
+    const results = await readComments(readsPerSec);
     const time = (Date.now() - start) / 1000;
     totalTime += time;
     totalErrors += results;
-    totalReads += filesPerSec - results;
-    console.log(`${filesPerSec} reads in ${time} seconds : ${results} errors`);
+    totalReads += readsPerSec - results;
+    console.log(`${readsPerSec} reads in ${time} seconds : ${results} errors`);
     if (time > 1) {
-      filesPerSec -= 50;
+      readsPerSec -= 50;
     } else if (time < 1) {
-      filesPerSec += 5;
+      readsPerSec += 5;
     }
     if (tests === totalTests) {
       testing = false;

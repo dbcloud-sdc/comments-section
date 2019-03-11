@@ -1,9 +1,9 @@
 config:
-  target: 'http://localhost:80/song'
+  target: 'http://localhost:3000/song'
   phases:
     - duration: 120
       arrivalRate: 350
-  processor: './powerCurve.js'
+  processor: '../helpers/powerCurve.js'
 scenarios:
   - flow:
     - function: 'randomSongPath'

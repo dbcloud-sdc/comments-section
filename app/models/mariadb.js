@@ -17,16 +17,29 @@ module.exports = {
     }
   }),
 
-  createComments: songId => pool
+  createComment: commentId => pool
     .then(conn => conn.query({
       rowsAsArray: false,
-      sql: `SELECT * FROM comments
+      sql: `INSERT INTO comments
+      SET title = "wrong"`,
+    }))
+    .catch(err => console.log(err)),
+
+  // updateComment: songId => pool
+  //   .then(conn => conn.query({
+  //     rowsAsArray: false,
+  //     sql: `'DELETE FROM comments WHERE title = "wrong"'
+  //     WHERE songId = ${songId}`,
+  //   }))
+  //   .catch(err => console.log(err)),
+
+  deleteComment: commentId => pool
+    .then(conn => conn.query({
+      rowsAsArray: false,
+      sql: `DELETE FROM comments
       WHERE songId = ${songId}`,
     }))
     .catch(err => console.log(err)),
-  // createComment: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
-  // updateComment: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
-  // deleteComment: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
   // readCount: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
 };
 
