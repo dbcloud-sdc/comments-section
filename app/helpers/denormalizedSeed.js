@@ -23,7 +23,8 @@ const randomComment = () => {
 class CommentsStream extends stream.Readable {
   constructor(opt) {
     super(opt);
-    this.limit = 1e8;
+    this.limit = 2.5e7;
+    this.set = 0;
     this.count = 0;
     this.cache = '';
     this.progress = null;
@@ -73,7 +74,7 @@ class CommentsStream extends stream.Readable {
   }
 
   generateComment() {
-    let string = `${this.count}\t`;
+    let string = `${this.set + this.count}\t`;
     string += `${randomNum(1e7)}\t`;
     string += `${randomNum(480) + 119}\t`;
     string += `${randomNum(1e4)}\t`;
@@ -82,15 +83,24 @@ class CommentsStream extends stream.Readable {
     string += `${randomComment()}\n`;
     return string;
   }
+
+  setStart(num) {
+    this.set = num;
+  }
 }
 
 async function seedCommentsToCSV() {
-  const ws = fs.createWriteStream('./test.tsv');
   const rs = new CommentsStream();
-  rs.pipe(ws);
-  ws.on('end', () => {
-    process.exit();
-  });
+  rs.pipe(fs.createWriteStream('./comments.tsv'));
+  const rs2 = new CommentsStream();
+  rs2.setStart = 2.5e7;
+  rs.pipe(fs.createWriteStream('./comments2.tsv'));
+  const rs3 = new CommentsStream();
+  rs3.setStart = 5e7;
+  rs.pipe(fs.createWriteStream('./comments3.tsv'));
+  const rs4 = new CommentsStream();
+  rs4.setStart = 7.5e7;
+  rs4.pipe(fs.createWriteStream('./comments4.tsv'));
 }
 
 seedCommentsToCSV();
