@@ -32,7 +32,7 @@ class CommentsStream extends stream.Readable {
 
   _read() {
     if (this.count === 0) {
-      this.push('id\tsongId\tsongTime\tfollowers\tuserName\tpostedAt\tmessage\n');
+      // this.push('id\tsongId\tsongTime\tfollowers\tusername\tpostedAt\tmessage\n');
     }
     if (this.count === this.limit) {
       this.push(null);
@@ -52,6 +52,7 @@ class CommentsStream extends stream.Readable {
     const progress = Math.floor(50 * (this.count / this.limit));
     if (progress !== this.progress) {
       this.progress = progress;
+      const percentile = `${progress * 2}% complete`;
       let progressBar = '[';
       for (let i = 0; i < progress; i++) {
         progressBar += '▉';
@@ -60,12 +61,13 @@ class CommentsStream extends stream.Readable {
         progressBar += ' ';
       }
       progressBar += ']';
-      console.clear();
-      console.log(progressBar);
-      console.log(`${progress * 2}% complete`);
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+
+      process.stdout.write(`${progressBar}  ${percentile}`);
       if (progress === 50) {
         const report = new Date() - this.startAt;
-        console.log(`finished in ${report / 1000} seconds`);
+        console.log(`\n\nfinished in ${report / 1000} seconds\n`);
       }
     }
   }
@@ -83,13 +85,8 @@ class CommentsStream extends stream.Readable {
 }
 
 async function seedCommentsToCSV() {
-  const ws = fs.createWriteStream('./test.tsv');
   const rs = new CommentsStream();
-  rs.pipe(ws);
-  ws.on('end', () => {
-    process.exit();
-  });
+  rs.pipe(fs.createWriteStream('./comments.tsv'));
 }
 
 seedCommentsToCSV();
-// seedUsersToCSV();

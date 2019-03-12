@@ -34,21 +34,21 @@ async function readMongo(n) {
 async function elasticTest(totalTests) {
 // testing, hertz, average,
   let testing = true;
-  let filesPerSec = 100;
+  let readsPerSec = 100;
   let tests = 0;
   let total = 0;
   console.log('~~ testing MongoDB ~~');
   while (testing) {
     tests += 1;
     const start = Date.now();
-    const results = await readMongo(filesPerSec);
+    const results = await readMongo(readsPerSec);
     const time = (Date.now() - start) / 1000;
-    console.log(`${filesPerSec} reads in ${time} seconds : ${results} errors`);
+    console.log(`${readsPerSec} reads in ${time} seconds : ${results} errors`);
     total += time;
     if (time > 1) {
-      filesPerSec -= 5;
+      readsPerSec -= 5;
     } else if (time < 1) {
-      filesPerSec += 5;
+      readsPerSec += 5;
     }
     if (tests === totalTests) {
       testing = false;
@@ -57,7 +57,7 @@ async function elasticTest(totalTests) {
   console.log(`Average time was ${total / tests} seconds`);
 
   testing = true;
-  filesPerSec = 100;
+  readsPerSec = 100;
   tests = 0;
   total = 0;
   console.log('~~ testing MariaDB ~~');
@@ -66,14 +66,14 @@ async function elasticTest(totalTests) {
   while (testing) {
     tests += 1;
     const start = Date.now();
-    const results = await readMaria(filesPerSec);
+    const results = await readMaria(readsPerSec);
     const time = (Date.now() - start) / 1000;
-    console.log(`${filesPerSec} reads in ${time} seconds : ${results} errors`);
+    console.log(`${readsPerSec} reads in ${time} seconds : ${results} errors`);
     total += time;
     if (time > 1) {
-      filesPerSec -= 10;
+      readsPerSec -= 10;
     } else if (time < 1) {
-      filesPerSec += 10;
+      readsPerSec += 10;
     }
     if (tests === totalTests) {
       testing = false;

@@ -7,7 +7,7 @@ function randomSongPath(userContext, events, done) {
 }
 
 function powerDistribution(n = 1e7) {
-  const baseNumber = Math.log(1e7);
+  const baseNumber = Math.log(n);
   return function randomNumber() {
     const power = Math.random() * baseNumber;
     return n - Math.floor(Math.exp(power));

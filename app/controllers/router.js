@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
-const db = require('../database/mariadb.js');
-const { cache, retrieve } = require('./redisCache');
+const db = require('../models/mariadb.js');
+const { cache, retrieve, resetExpiration } = require('../models/redisCache');
 
 const router = express.Router();
 
@@ -12,14 +12,21 @@ router.get('/:songId', (req, res) => {
 router.get('/:songId/comments', (req, res) => {
   const { songId } = req.params;
   retrieve(songId)
-    .then((data) => {
-      res.status(200).send(data);
-    })
+    .then(data => resetExpiration(songId)
+      .then(() => {
+        res.status(200).send(data);
+      })
+      .catch(() => {
+        console.log('error reseting expiration');
+      }))
     .catch(() => db.readComments(songId)
       .then((data) => {
         cache(songId, data)
           .then(() => {
             res.status(200).send(data);
+          })
+          .catch((err) => {
+            res.status(500).send(err);
           });
       })
       .catch((err) => {
@@ -29,16 +36,15 @@ router.get('/:songId/comments', (req, res) => {
 
 router.post('/:songId/comments', (req, res) => {
   const { songId } = req.params;
-  // declare request body variable
-  db.createComment(songId, body)
-    .then(() => {
-      // console.log('posted comment');
-      res.send(201);
-    })
-    .catch((err) => {
-      // console.log('failed to post comment');
-      res.send(500, err);
-    });
+  const { body } = req;
+  console.log(songId, body);
+  // db.createComment(songId, body)
+  //   .then(() => {
+  res.send(201);
+  // })
+  // .catch((err) => {
+  //   res.send(500, err);
+  // });
 });
 
 router.delete('/:songId/comments', (req, res) => {
@@ -82,3 +88,27 @@ router.get('/:songId/commentCount', (req, res) => {
 });
 
 module.exports = router;
+
+
+/* version with no expiration updating
+router.get('/:songId/comments', (req, res) => {
+  const { songId } = req.params;
+  retrieve(songId)
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch(() => db.readComments(songId)
+      .then((data) => {
+        cache(songId, data)
+          .then(() => {
+            res.status(200).send(data[0]);
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      }));
+});
+*/
