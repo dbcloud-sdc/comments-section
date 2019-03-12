@@ -8,7 +8,7 @@ node_modules/
 *.pid
 logs
 *.log
-**config.js
+/config.js
 **.csv
 **.tsv
 **.rdb

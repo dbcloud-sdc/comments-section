@@ -1,15 +1,30 @@
 # dBCloud: Comments Section API v1.0
 
 ## Table of Contents
-* [**Comments-Section.comments**](#commentscomments)
+
+* [**Getting Started**](#getting-started)
+    * [Database Configuration](#database-configuration)
+    * [Quick Start](#quick-start)
+* [**Comments-Section.comments**](#comments-section_comments)
     * [GET /song/:songId/comments](#get-songsong_idcomments)
     * [POST /song/:songId/comments](#post-songsong_idcomments)
     * [PATCH /song/:songId/comments](#patch-songsong_idcomments)
-    * [DELETE /song/:songId/comments](#delete-songsong_idcomments)
-* [**Comments-Section.commentCount**](#commentscommentscount)
+    * [DELETE /song/:songId/comments](#delete-songsong_idcommentscomment_id)
+* [**Comments-Section.commentCount**](#comments-section_commentcount)
     * [GET /song/:songId/commentCount](#get-songsong_idcommentcount)
 * [**Change History**](#change-history)
 <hr>
+
+## Getting Started
+
+### Database Configuration
+  * This file comes with a default configuration file located in helpers that will need to be copied to the app root directory. You can fill in your MySQL/MariaDB details here or use environment variables when spinning up the server through node.
+
+### Quick Start
+  * Run npm i
+  * Run webpack -p --watch
+  * Run nodemon
+
 
 ## Comments-Section.comments
 ### `GET /song/:songId/comments`
@@ -137,7 +152,6 @@ Given a song id, return the total number of comments for that song.
 ## Change History
 |Name                                 |Version    |Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Description     |
 |:----------------------------------- |:--------- |:--------- |:------- |
+|[@pafrias](https://github.com/pafrias) |1.1        |Mar-12-2019 |Implement all CRUD routes with validators and reconfigure client for updated database responses
+|[@pafrias](https://github.com/pafrias) |1.1        |Mar-9-2019 |Implement artillery & New Relic benchmarking
 |[@pafrias](https://github.com/pafrias) |1.0        |Feb-27-2019 |Document initial API CRUD routes for relevant models in the `Reservations` microservice.
-
-### Getting Started
-FILL ME IN
