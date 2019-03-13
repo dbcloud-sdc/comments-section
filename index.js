@@ -16,6 +16,10 @@ app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get(/loadio/, (req, res) => {
+  res.sendFile(path.resolve(__dirname), './loadio.txt');
+});
+
 app.get(/bundle/, (req, res) => {
   res.sendFile(path.resolve(__dirname, './dist/bundle.js'));
 });
