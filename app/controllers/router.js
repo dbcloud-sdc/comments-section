@@ -9,9 +9,9 @@ router.get('/:songId', (req, res) => {
 });
 
 router.route('/:songId/comments')
-  .get((req, res) => {
+  .get(async (req, res) => {
     const { songId } = req.params;
-    db.readComments(songId)
+    await db.readComments(songId)
       .then((data) => {
         res.status(200).send(data);
       })
