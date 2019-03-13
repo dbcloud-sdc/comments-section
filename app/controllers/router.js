@@ -1,12 +1,8 @@
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
 const db = require('../models/mariadb.js');
 
 const router = express.Router();
-
-router.get('/:songId', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../dist/index.html'));
-});
 
 router.route('/:songId/comments')
   .get(async (req, res) => {
@@ -19,7 +15,7 @@ router.route('/:songId/comments')
         res.status(500).send(err);
       });
   })
-  .post((req, res) => {
+  .post(bodyParser.json(), (req, res) => {
     const { songId } = req.params;
     const { body } = req;
     db.createComment(songId, body)

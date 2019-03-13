@@ -35,9 +35,9 @@ export default class CommentSection extends React.Component {
   }
 
   parseData(comments) {
-    var results = _.sortBy(comments, (comment) => -comment.postAt);
+    var results = _.sortBy(comments, (comment) => -comment.postedAt);
     return results.map((comment) => {
-      comment.postedAt = moment(comment.postAt * 60000);
+      comment.postedAt = moment(comment.postedAt * 60000);
       const second = comment.songTime % 60;
       const minute = Math.floor(comment.songTime / 60);
       comment.songTime = `${minute}:${second < 10 ? `0${second}` : second}`;
@@ -46,10 +46,9 @@ export default class CommentSection extends React.Component {
   }
 
   getComments = () => {
-    axios.get(`${window.location.pathname}/comments`)
+    axios.get(`/api${window.location.pathname}/comments`)
     .then((res) => {
       const sortedComments = this.parseData(res.data);
-      console.log(sortedComments);
       this.setState({
         comments: sortedComments,
         commentCount: sortedComments.length

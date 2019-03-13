@@ -5,6 +5,7 @@
   "main": ".eslintrc.js",
   "scripts": {
     "seed": "node seed.js",
+    "postinstall": "webpack -p",
     "test": "jest tests",
     "test:coverage": "jest test  --coverage",
     "test:watch": "jest tests --watch",
