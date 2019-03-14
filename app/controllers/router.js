@@ -5,9 +5,9 @@ const db = require('../models/mariadb.js');
 const router = express.Router();
 
 router.route('/:songId/comments')
-  .get(async (req, res) => {
+  .get((req, res) => {
     const { songId } = req.params;
-    await db.readComments(songId)
+    db.readComments(songId)
       .then((data) => {
         res.status(200).send(data);
       })
@@ -50,19 +50,6 @@ router.patch('/:songId/comments', (req, res) => {
     })
     .catch((err) => {
       // console.log('failed to update comment');
-      res.send(400, err);
-    });
-});
-
-router.get('/:songId/commentCount', (req, res) => {
-  const { songId } = req.params;
-  db.readCount(songId)
-    .then((data) => {
-      // console.log('got comment count');
-      res.send(200, { count: data[0]['COUNT(*)'] });
-    })
-    .catch((err) => {
-      // console.log("didn't get count");
       res.send(400, err);
     });
 });

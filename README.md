@@ -6,12 +6,10 @@
     * [Database Configuration](#database-configuration)
     * [Quick Start](#quick-start)
 * [**Comments-Section.comments**](#comments-section_comments)
-    * [GET /song/:songId/comments](#get-songsong_idcomments)
-    * [POST /song/:songId/comments](#post-songsong_idcomments)
-    * [PATCH /song/:songId/comments](#patch-songsong_idcomments)
-    * [DELETE /song/:songId/comments](#delete-songsong_idcommentscomment_id)
-* [**Comments-Section.commentCount**](#comments-section_commentcount)
-    * [GET /song/:songId/commentCount](#get-songsong_idcommentcount)
+    * [GET api/song/:songId/comments](#get-apisongsong_idcomments)
+    * [POST api/song/:songId/comments](#post-apisongsong_idcomments)
+    * [PATCH api/song/:songId/comments](#patch-apisongsong_idcomments)
+    * [DELETE api/song/:songId/comments](#delete-apisongsong_idcommentscomment_id)
 * [**Change History**](#change-history)
 <hr>
 
@@ -27,7 +25,7 @@
 
 
 ## Comments-Section.comments
-### `GET /song/:songId/comments`
+### `GET api/song/:songId/comments`
 Given a song id, return the comments for that song.
 
 **Get Request Structure**
@@ -55,7 +53,7 @@ Given a song id, return the comments for that song.
   * **Code:** `404 NOT FOUND`
   * **Content:** `{ error : * }`
 
-### `POST /song/:songId/comments`
+### `POST api/song/:songId/comments`
 Write a comment to database, return comment id.
 
 **Post Request Structure**
@@ -80,7 +78,7 @@ Write a comment to database, return comment id.
   * **Code:** `400 BAD REQUEST`
     **Content:** `{ error : * }`
 
-### `PATCH /song/:songId/comments`
+### `PATCH api/song/:songId/comments`
 Update a comment on database, return comment id.
 
 **Patch Request Structure**
@@ -104,7 +102,7 @@ Update a comment on database, return comment id.
   * **Code:** `400 BAD REQUEST`
     **Content:** `{ error : * }`
 
-### `DELETE /song/:songId/comments/:commentId`
+### `DELETE api/song/:songId/comments/:commentId`
 Given a comment id, delete comment from database.
 
 **Delete Request Structure**
