@@ -1,9 +1,6 @@
-CREATE DATABASE IF NOT EXISTS comments_section;
-
-USE comments_section;
 
 CREATE TABLE IF NOT EXISTS comments (
-  id INT NOT NULL AUTO_INCREMENT,
+  id INT,
   songId INT NOT NULL,
   songTime SMALLINT NOT NULL,
   followers INT,

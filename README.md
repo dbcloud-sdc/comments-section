@@ -1,18 +1,31 @@
 # dBCloud: Comments Section API v1.0
 
 ## Table of Contents
-* [**Comments-Section.comments**](#commentscomments)
-    * [GET /song/:songId/comments](#get-songsong_idcomments)
-    * [POST /song/:songId/comments](#post-songsong_idcomments)
-    * [PATCH /song/:songId/comments](#patch-songsong_idcomments)
-    * [DELETE /song/:songId/comments](#delete-songsong_idcomments)
-* [**Comments-Section.commentCount**](#commentscommentscount)
-    * [GET /song/:songId/commentCount](#get-songsong_idcommentcount)
+
+* [**Getting Started**](#getting-started)
+    * [Database Configuration](#database-configuration)
+    * [Quick Start](#quick-start)
+* [**Comments-Section.comments**](#comments-section_comments)
+    * [GET api/song/:songId/comments](#get-apisongsong_idcomments)
+    * [POST api/song/:songId/comments](#post-apisongsong_idcomments)
+    * [PATCH api/song/:songId/comments](#patch-apisongsong_idcomments)
+    * [DELETE api/song/:songId/comments](#delete-apisongsong_idcommentscomment_id)
 * [**Change History**](#change-history)
 <hr>
 
+## Getting Started
+
+### Database Configuration
+  * This file comes with a default configuration file located in helpers that will need to be copied to the app root directory. You can fill in your MySQL/MariaDB details here or use environment variables when spinning up the server through node.
+
+### Quick Start
+  * Run npm i
+  * Run webpack -p --watch
+  * Run nodemon
+
+
 ## Comments-Section.comments
-### `GET /song/:songId/comments`
+### `GET api/song/:songId/comments`
 Given a song id, return the comments for that song.
 
 **Get Request Structure**
@@ -40,7 +53,7 @@ Given a song id, return the comments for that song.
   * **Code:** `404 NOT FOUND`
   * **Content:** `{ error : * }`
 
-### `POST /song/:songId/comments`
+### `POST api/song/:songId/comments`
 Write a comment to database, return comment id.
 
 **Post Request Structure**
@@ -65,7 +78,7 @@ Write a comment to database, return comment id.
   * **Code:** `400 BAD REQUEST`
     **Content:** `{ error : * }`
 
-### `PATCH /song/:songId/comments`
+### `PATCH api/song/:songId/comments`
 Update a comment on database, return comment id.
 
 **Patch Request Structure**
@@ -89,7 +102,7 @@ Update a comment on database, return comment id.
   * **Code:** `400 BAD REQUEST`
     **Content:** `{ error : * }`
 
-### `DELETE /song/:songId/comments/:commentId`
+### `DELETE api/song/:songId/comments/:commentId`
 Given a comment id, delete comment from database.
 
 **Delete Request Structure**
@@ -137,7 +150,6 @@ Given a song id, return the total number of comments for that song.
 ## Change History
 |Name                                 |Version    |Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Description     |
 |:----------------------------------- |:--------- |:--------- |:------- |
+|[@pafrias](https://github.com/pafrias) |1.1        |Mar-12-2019 |Implement all CRUD routes with validators and reconfigure client for updated database responses
+|[@pafrias](https://github.com/pafrias) |1.1        |Mar-9-2019 |Implement artillery & New Relic benchmarking
 |[@pafrias](https://github.com/pafrias) |1.0        |Feb-27-2019 |Document initial API CRUD routes for relevant models in the `Reservations` microservice.
-
-### Getting Started
-FILL ME IN

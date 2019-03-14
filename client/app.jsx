@@ -15,12 +15,11 @@ library.add(faCommentAlt);
 export default class CommentSection extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       comments: [],
       count: '',
       displayedComments: [],
-      commentCount: 20, 
+      commentCount: 10, 
       loading: true
     };
   }
@@ -28,7 +27,6 @@ export default class CommentSection extends React.Component {
 
   componentDidMount() {
     this.getComments();
-    this.getCommentCount();
     window.addEventListener('scroll', this.onScroll, false);
   }
 
@@ -36,16 +34,24 @@ export default class CommentSection extends React.Component {
     window.removeEventListener('scroll', this.onScroll, false);
   }
 
+  parseData(comments) {
+    var results = _.sortBy(comments, (comment) => -comment.postedAt);
+    return results.map((comment) => {
+      comment.postedAt = moment(comment.postedAt * 60000);
+      const second = comment.songTime % 60;
+      const minute = Math.floor(comment.songTime / 60);
+      comment.songTime = `${minute}:${second < 10 ? `0${second}` : second}`;
+      return comment;
+    });
+  }
+
   getComments = () => {
-    axios.get(`${window.location.pathname}/comments`)
+    axios.get(`/api${window.location.pathname}/comments`)
     .then((res) => {
-      console.log(res);
-      const sortedComments = _.sortBy(res.data, (i) => {
-        return new moment(i.postedAt)
-      }).reverse();
-      console.log(sortedComments);
+      const sortedComments = this.parseData(res.data);
       this.setState({
-        comments: sortedComments
+        comments: sortedComments,
+        commentCount: sortedComments.length
       })
     })
     .then(() => {
@@ -53,18 +59,18 @@ export default class CommentSection extends React.Component {
     })
   }
 
-  getCommentCount = () => {
-    axios.get(`${window.location.pathname}/commentCount`)
-    .then((response) => {
-      this.setState({
-        count: response.data.count
-      })
-    })
-  }
+  // getCommentCount = () => {
+  //   axios.get(`${window.location.pathname}/commentCount`)
+  //   .then((response) => {
+  //     this.setState({
+  //       count: response.data.count
+  //     })
+  //   })
+  // }
 
   handleScroll = () => {
     if(this.state.commentCount !== this.state.comments.length){
-      if(this.state.commentCount + 20 > this.state.comments.length){
+      if(this.state.commentCount + 10 > this.state.comments.length){
         this.setState(state => {
           state.loading = false
           state.commentCount = state.commentCount = this.state.comments.length;
@@ -72,7 +78,7 @@ export default class CommentSection extends React.Component {
       }else{
         // this.setState(state => state.commentCount = state.commentCount + 20, () => this.renderComments());
         this.setState(state => {
-          state.commentCount = state.commentCount = state.commentCount + 20;
+          state.commentCount = state.commentCount = state.commentCount + 10;
         }, () => this.renderComments());
       }
     }

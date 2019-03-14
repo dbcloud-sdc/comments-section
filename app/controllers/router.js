@@ -1,51 +1,31 @@
 const express = require('express');
-const path = require('path');
+const bodyParser = require('body-parser');
 const db = require('../models/mariadb.js');
-const { cache, retrieve, resetExpiration } = require('../models/redisCache');
 
 const router = express.Router();
 
-router.get('/:songId', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../dist/index.html'));
-});
-
-router.get('/:songId/comments', (req, res) => {
-  const { songId } = req.params;
-  retrieve(songId)
-    .then(data => resetExpiration(songId)
-      .then(() => {
-        res.status(200).send(data);
-      })
-      .catch(() => {
-        console.log('error reseting expiration');
-      }))
-    .catch(() => db.readComments(songId)
+router.route('/:songId/comments')
+  .get((req, res) => {
+    const { songId } = req.params;
+    db.readComments(songId)
       .then((data) => {
-        cache(songId, data)
-          .then(() => {
-            res.status(200).send(data);
-          })
-          .catch((err) => {
-            res.status(500).send(err);
-          });
+        res.status(200).send(data);
       })
       .catch((err) => {
         res.status(500).send(err);
-      }));
-});
-
-router.post('/:songId/comments', (req, res) => {
-  const { songId } = req.params;
-  const { body } = req;
-  console.log(songId, body);
-  // db.createComment(songId, body)
-  //   .then(() => {
-  res.send(201);
-  // })
-  // .catch((err) => {
-  //   res.send(500, err);
-  // });
-});
+      });
+  })
+  .post(bodyParser.json(), (req, res) => {
+    const { songId } = req.params;
+    const { body } = req;
+    db.createComment(songId, body)
+      .then(() => {
+        res.status(201).send();
+      })
+      .catch((err) => {
+        res.send(500, err);
+      });
+  });
 
 router.delete('/:songId/comments', (req, res) => {
   const { songId } = req.params;
@@ -70,19 +50,6 @@ router.patch('/:songId/comments', (req, res) => {
     })
     .catch((err) => {
       // console.log('failed to update comment');
-      res.send(400, err);
-    });
-});
-
-router.get('/:songId/commentCount', (req, res) => {
-  const { songId } = req.params;
-  db.readCount(songId)
-    .then((data) => {
-      // console.log('got comment count');
-      res.send(200, { count: data[0]['COUNT(*)'] });
-    })
-    .catch((err) => {
-      // console.log("didn't get count");
       res.send(400, err);
     });
 });

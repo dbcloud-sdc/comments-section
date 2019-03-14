@@ -7,23 +7,32 @@ const pool = mysql.createPool(config);
 pool.queryAsync = bluebird.promisify(pool.query).bind(pool);
 
 module.exports = {
-  readComments: songId => pool.queryAsync({
-    rowsAsArray: false,
-    sql: `SELECT * FROM comments
-                WHERE songId = ${songId}`,
-  }).catch((err) => {
-    if (err.fatal) {
-      console.log(err);
-    }
-  }),
-
-  createComment: commentId => pool
-    .then(conn => conn.query({
+  readComments: (songId) => {
+    const validatedId = Number.parseInt(songId, 10);
+    return pool.queryAsync({
       rowsAsArray: false,
-      sql: `INSERT INTO comments
-      SET title = "wrong"`,
-    }))
-    .catch(err => console.log(err)),
+      sql: `SELECT * FROM comments
+                  WHERE songId = ${validatedId}`,
+    }).catch((err) => {
+      if (err.fatal) {
+        console.log(err);
+      }
+    });
+  },
+
+  createComment: (songId, {
+    songTime, followers, username, postedAt, message,
+  }) => {
+    // validate params
+    let validate;
+    return pool.queryAsync({
+      rowsAsArray: false,
+      sql: `INSERT INTO comments (songId, songTime, followers, username, postedAt, message)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      values: [songId, songTime, followers, username, postedAt, message],
+    })
+      .catch(err => console.log(err));
+  },
 
   // updateComment: songId => pool
   //   .then(conn => conn.query({
@@ -33,14 +42,16 @@ module.exports = {
   //   }))
   //   .catch(err => console.log(err)),
 
-  deleteComment: commentId => pool
-    .then(conn => conn.query({
+  deleteComment: (commentId) => {
+    let validate;
+    return pool.queryAsync({
       rowsAsArray: false,
       sql: `DELETE FROM comments
-      WHERE songId = ${songId}`,
-    }))
-    .catch(err => console.log(err)),
-  // readCount: songId => db.query(`SELECT * FROM comments where songId = ${songId}`),
+      WHERE id = ${commentId}`,
+    })
+      .catch(err => console.log(err));
+  },
+  // readCount: songId => db.query(`SELECT * FROM comments where songId = ${songId}`)
 };
 
 // implement streams
