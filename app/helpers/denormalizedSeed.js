@@ -6,6 +6,7 @@ const randomNum = num => Math.ceil(Math.random() * num);
 
 const randomComment = () => {
   const lorem = [
+    'wow',
     'Lorem ipsum dolor amet street art cillum lo-fi labore wolf pour-over authentic gastropub.',
     'Quis taiyaki eu, fingerstache tilde hella incididunt stumptown irony messenger bag ramps.',
     "Authentic green juice in 90's, vexillologist PBR&B kale chips cold-pressed affogato adaptogen vaporware in ut ennui celiac.",
