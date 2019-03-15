@@ -21,12 +21,11 @@ app.get(/bundle/, (req, res) => {
   res.sendFile(path.resolve(__dirname, './dist/bundle.js'));
 });
 
-
 app.use('/song/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './dist/index.html'));
 });
 
-app.use('/api/song', router);
+app.all('/api/song', router);
 
 // app.use('*', (req, res) => {
 //   res.redirect('/song/1212039');
