@@ -3,21 +3,22 @@ const bluebird = require('bluebird');
 const config = require('../../config.js');
 
 const pool = mysql.createPool(config);
-
-pool.queryAsync = bluebird.promisify(pool.query).bind(pool);
+pool.query = bluebird.promisify(pool.query);
 
 module.exports = {
-  readComments: (songId) => {
+  async readComments(songId) {
     const validatedId = Number.parseInt(songId, 10);
-    return pool.queryAsync({
-      rowsAsArray: false,
-      sql: `SELECT * FROM comments
-                  WHERE songId = ${validatedId}`,
-    }).catch((err) => {
-      if (err.fatal) {
-        console.log(err);
-      }
-    });
+    try {
+      const result = await pool.query({
+        rowsAsArray: false,
+        sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
+            WHERE songId = ${validatedId}`,
+      });
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
   },
 
   createComment: (songId, {
