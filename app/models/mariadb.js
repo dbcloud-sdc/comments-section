@@ -3,7 +3,6 @@ const bluebird = require('bluebird');
 const config = require('../../config.js');
 
 const pool = db.createPool(config);
-// pool.query = bluebird.promisify(pool.query);
 
 module.exports = {
   readComments(songId, cb) {
@@ -17,7 +16,7 @@ module.exports = {
         sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
                   WHERE songId = ${validatedId}`,
       }, (err, results) => {
-        console.log('trying to return');
+        connection.release();
         if (err) cb(err);
         cb(null, results);
       });
