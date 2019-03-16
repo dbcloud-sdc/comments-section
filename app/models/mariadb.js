@@ -1,25 +1,41 @@
-const mysql = require('mysql');
+const db = require('mysql');
 const bluebird = require('bluebird');
 const config = require('../../config.js');
 
-const pool = mysql.createPool(config);
-pool.query = bluebird.promisify(pool.query);
+const pool = db.createPool(config);
+// pool.query = bluebird.promisify(pool.query);
 
 module.exports = {
-  async readComments(songId) {
+  async readComments(songId, cb) {
     const validatedId = Number.parseInt(songId, 10);
-    try {
-      const result = await pool.query({
+    // console.log('trying connection');
+    pool.getConnection((err, connection) => {
+      // console.log('trying query');
+      if (err) cb(err);
+      connection.query({
         rowsAsArray: false,
         sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
-            WHERE songId = ${validatedId}`,
+                  WHERE songId = ${validatedId}`,
+      }, (err, results) => {
+        connection.release();
+        if (err) cb(err);
+        cb(null, results);
       });
-      return result;
-    } catch (err) {
-      console.log(err);
-      throw new Error(err);
-    }
+    });
   },
+  // try {
+  //   const result = await pool.query({
+  //     rowsAsArray: false,
+  //     sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
+  //         WHERE songId = ${validatedId}`,
+  //   }).catch((err) => {
+  //     console.log(err);
+  //   });
+  //   return result;
+  // } catch (err) {
+  //   console.log(err);
+  //   throw new Error(err);
+  // }
 
   createComment: (songId, {
     songTime, followers, username, postedAt, message,
