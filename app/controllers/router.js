@@ -7,12 +7,12 @@ const router = express.Router();
 router.route('/:songId/comments')
   .get((req, res) => {
     const { songId } = req.params;
-    db.readComments(songId, (err, data) => {
-      if (err) res.status(500).send(err);
-      else {
+    db.readComments(songId)
+      .then((data) => {
         res.status(200).send(data);
-      }
-    });
+      }).catch((err) => {
+        res.status(500).send(err);
+      });
   })
   .post(bodyParser.json(), (req, res) => {
     const { songId } = req.params;

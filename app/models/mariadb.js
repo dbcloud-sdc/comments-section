@@ -3,25 +3,26 @@ const bluebird = require('bluebird');
 const config = require('../../config.js');
 
 const pool = db.createPool(config);
-// pool.query = bluebird.promisify(pool.query);
+pool.getConnectionAsync = bluebird.promisify(pool.getConnection);
 
 module.exports = {
-  async readComments(songId, cb) {
+  readComments(songId) {
     const validatedId = Number.parseInt(songId, 10);
-    // console.log('trying connection');
-    pool.getConnection((err, connection) => {
-      // console.log('trying query');
-      if (err) cb(err);
-      connection.query({
-        rowsAsArray: false,
-        sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
-                  WHERE songId = ${validatedId}`,
-      }, (err, results) => {
-        connection.release();
-        if (err) cb(err);
-        cb(null, results);
+    console.log('trying connection');
+    return pool.getConnectionAsync()
+      .then((connection) => {
+        connection.query = bluebird.promisify(connection.query);
+        return connection.query({
+          rowsAsArray: false,
+          sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
+                    WHERE songId = ${validatedId}`,
+        }).then((data) => {
+          connection.release();
+          return data;
+        });
+      }).catch((err) => {
+        console.log(err);
       });
-    });
   },
   // try {
   //   const result = await pool.query({
