@@ -1,9 +1,8 @@
-const mysql = require('mysql');
+const db = require('mysql');
 const bluebird = require('bluebird');
 const config = require('../../config.js');
 
-const pool = mysql.createPool(config);
-pool.query = bluebird.promisify(pool.query);
+const pool = db.createPool(config);
 
 module.exports = {
   readComments(songId) {
@@ -16,6 +15,19 @@ module.exports = {
       throw new Error(err);
     });
   },
+  // try {
+  //   const result = await pool.query({
+  //     rowsAsArray: false,
+  //     sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
+  //         WHERE songId = ${validatedId}`,
+  //   }).catch((err) => {
+  //     console.log(err);
+  //   });
+  //   return result;
+  // } catch (err) {
+  //   console.log(err);
+  //   throw new Error(err);
+  // }
 
   createComment: (songId, {
     songTime, followers, username, postedAt, message,

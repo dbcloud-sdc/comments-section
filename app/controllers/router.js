@@ -10,8 +10,7 @@ router.route('/:songId/comments')
     db.readComments(songId)
       .then((data) => {
         res.status(200).send(data);
-      })
-      .catch((err) => {
+      }).catch((err) => {
         res.status(500).send(err);
       });
   })
