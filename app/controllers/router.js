@@ -5,9 +5,9 @@ const db = require('../models/mariadb.js');
 const router = express.Router();
 
 router.route('/:songId/comments')
-  .get(async (req, res) => {
+  .get((req, res) => {
     const { songId } = req.params;
-    await db.readComments(songId)
+    db.readComments(songId)
       .then((data) => {
         res.status(200).send(data);
       })

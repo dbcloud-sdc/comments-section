@@ -6,19 +6,15 @@ const pool = mysql.createPool(config);
 pool.query = bluebird.promisify(pool.query);
 
 module.exports = {
-  async readComments(songId) {
+  readComments(songId) {
     const validatedId = Number.parseInt(songId, 10);
-    try {
-      const result = await pool.query({
-        rowsAsArray: false,
-        sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
+    return pool.query({
+      rowsAsArray: false,
+      sql: `SELECT id, songTime, followers, username, postedAt, message FROM comments
             WHERE songId = ${validatedId}`,
-      });
-      return result;
-    } catch (err) {
-      console.log(err);
+    }).catch((err) => {
       throw new Error(err);
-    }
+    });
   },
 
   createComment: (songId, {
